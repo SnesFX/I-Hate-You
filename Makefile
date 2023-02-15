@@ -1,15 +1,20 @@
 CC = g++
-CFLAGS = -std=c++11 -Wall -Wextra -pedantic
-LDLIBS = -luser32 -lgdi32
+CFLAGS = -std=c++11 -Wall -Wextra -pedantic -I/usr/local/include/SDL2
+LDFLAGS = -L/usr/local/lib -lSDL2
+
+TARGET = I-Hate-You
+
 SRCDIR = src
 OBJDIR = obj
-BINDIR = bin
 
-ihateyou: $(OBJDIR)/main.o
-	$(CC) $(CFLAGS) $< -o $(BINDIR)/$@ $(LDLIBS)
+SRCS = $(wildcard $(SRCDIR)/*.cpp)
+OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCS))
 
-$(OBJDIR)/main.o: $(SRCDIR)/main.cpp
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) $^ -o $@
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJDIR)/*.o $(BINDIR)/ihateyou
+	rm -f $(OBJDIR)/*.o $(TARGET)
